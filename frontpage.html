@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMS - Student Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff8c00, #ff6600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .system-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-menu li {
+            position: relative;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-menu a:hover {
+            color: #ff8c00;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-details {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 120px;
+            background: linear-gradient(180deg, #ff8c00, #ff6600);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-item {
+            padding: 20px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left-color: white;
+        }
+
+        .sidebar-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-label {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* Password Notice */
+        .pwd-notice {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        /* Important Links */
+        .important-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .link-btn {
+            background-color: #ff8c00;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .link-btn.blue {
+            background-color: #1e88e5;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .link-btn .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #ff8c00, #ff6600);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* My Courses Card */
+        .course-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .course-progress {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#4caf50 0deg, #4caf50 calc(var(--progress) * 3.6deg), #e0e0e0 calc(var(--progress) * 3.6deg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            float: left;
+            margin-right: 15px;
+            position: relative;
+        }
+
+        .course-progress::before {
+            content: '';
+            position: absolute;
+            width: 46px;
+            height: 46px;
+            background: white;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .course-progress span {
+            position: relative;
+            z-index: 2;
+        }
+
+        .course-info h4 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .course-info p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .course-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            clear: both;
+        }
+
+        .course-btn {
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 12px;
+            background: white;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .course-btn:hover {
+            background: #ff8c00;
+            color: white;
+            border-color: #ff8c00;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e88e5;
+        }
+
+        /* Fee Card */
+        .fee-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .pay-btn {
+            background: linear-gradient(135deg, #ff8c00, #ff6600);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s;
+        }
+
+        .pay-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .fee-notification {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn.primary {
+            background: #1e88e5;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Banner Card */
+        .banner-card {
+            background: linear-gradient(135deg, #ffedcc, #ffd699);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            height: 400px;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            padding: 30px;
+        }
+
+        .banner-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .banner-subtitle {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff6600;
+            margin-bottom: 20px;
+        }
+
+        .banner-stats {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .banner-footer {
+            background: #ff6600;
+            color: white;
+            padding: 10px 20px;
+            display: inline-block;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        /* Messages Card */
+        .message-item {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .message-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .message-text {
+            color: #666;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Placement Details */
+        .placement-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .placement-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .placement-company {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e88e5;
+            margin-bottom: 10px;
+        }
+
+        .placement-detail {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .company-item {
+            padding: 15px;
+            border-left: 4px solid #ff8c00;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .company-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .company-stream {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .company-package {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Announcements */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #1e88e5;
+            border-bottom-color: #1e88e5;
+        }
+
+        .announcement-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .announcement-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .announcement-date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .announcement-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Authorities Section */
+        .authorities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .authority-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .authority-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .authority-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 4px solid #f0f0f0;
+        }
+
+        .authority-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .authority-role {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .authority-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .authority-position {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .authority-contact {
+            font-size: 13px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .authority-contact i {
+            margin-right: 5px;
+        }
+
+        .book-appointment {
+            background: #1e88e5;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .book-appointment:hover {
+            background: #1565c0;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .carousel-arrow {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .carousel-arrow:hover {
+            background: #ff8c00;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            
+            .sidebar-label {
+                font-size: 10px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .placement-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        .view-more-btn {
+            background: #1e88e5;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            float: right;
+            margin-bottom: 20px;
+        }
+
+        .pagination-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">🎓</div>
+            <div>
+                <div class="system-name">UMS</div>
+                <small style="color: #999;">UNIVERSITY MANAGEMENT SYSTEM</small>
+            </div>
+        </div>
+        
+        <ul class="nav-menu">
+            <li><a href="#academics">Academics ▼</a></li>
+            <li><a href="#administrative">Administrative ▼</a></li>
+            <li><a href="#links">Important Links ▼</a></li>
+            <li><a href="#services">Student Services ▼</a></li>
+            <li><a href="#quick">Quick Links ▼</a></li>
+        </ul>
+        
+        <div class="user-section">
+            <div class="user-info">
+                <div class="user-name">Ashwin Kumar Yadav</div>
+                <div class="user-details">Reg. No.: 12401338 | Section: 4245A</div>
+                <div class="user-details">B.Tech (Computer Science and Engineering) (P132)</div>
+            </div>
+            <div class="user-avatar">AY</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-item active" onclick="showSection('dashboard')">
+                <div class="sidebar-icon">📊</div>
+                <div class="sidebar-label">Dashboard</div>
+            </div>
+            <div class="sidebar-item" onclick="showSection('lpu-touch')">
+                <div class="sidebar-icon">📱</div>
+                <div class="sidebar-label">LPU Touch</div>
+            </div>
+            <div class="sidebar-item" onclick="showSection('lpu-live')">
+                <div class="sidebar-icon">💬</div>
+                <div class="sidebar-label">LPU Live</div>
+            </div>
+            <div class="sidebar-item" onclick="showSection('my-class')">
+                <div class="sidebar-icon">🐻</div>
+                <div class="sidebar-label">My Class</div>
+            </div>
+            <div class="sidebar-item" onclick="showSection('yourdost')">
+                <div class="sidebar-icon">👥</div>
+                <div class="sidebar-label">YourDost</div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content" id="mainContent">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section">
+                <!-- Password Notice -->
+                <div class="pwd-notice">
+                    UMS Pwd will expire after 89 days. Do change your pwd on or before 16-05-2026
+                </div>
+
+                <!-- Important Links -->
+                <h2 class="section-header">Important Links</h2>
+                <div class="important-links">
+                    <button class="link-btn">Hostel Booking</button>
+                    <button class="link-btn">Apply for Edu-Revolution <span class="badge">1</span></button>
+                    <button class="link-btn blue">RMS</button>
+                    <button class="link-btn blue">Fee Dashboard</button>
+                    <button class="link-btn">Issued Books</button>
+                    <button class="link-btn blue">Academic Calendar</button>
+                    <button class="link-btn blue">Emergency Numbers</button>
+                    <button class="link-btn blue">Certificate Request</button>
+                    <button class="link-btn blue">Part-time Job</button>
+                    <button class="link-btn blue">Security Brochure</button>
+                    <button class="link-btn blue">Date Sheet</button>
+                </div>
+
+                <!-- Main Cards Grid -->
+                <div class="cards-grid">
+                    <!-- My Courses Card -->
+                    <div class="card">
+                        <div class="card-header">📚 My Courses</div>
+                        
+                        <div class="course-item">
+                            <div class="course-progress" style="--progress: 88">
+                                <span>88%</span>
+                            </div>
+                            <div class="course-info">
+                                <h4>CSE211: COMPUTER ORGANIZATION AND DESIGN</h4>
+                                <p>Term: 25262</p>
+                                <p>Roll No: R424SAB47 / Group 2</p>
+                                <p>Exam Pattern: 11: MTE: 100% MCQ – 0% Theory: ETE: 100% MCQ – 0% Theory</p>
+                            </div>
+                            <div class="course-buttons">
+                                <button class="course-btn">IP</button>
+                                <button class="course-btn">Syllabus</button>
+                                <button class="course-btn">OER</button>
+                                <button class="course-btn">Timetable</button>
+                                <button class="course-btn">Outcomes</button>
+                                <button class="course-btn">View Books</button>
+                            </div>
+                        </div>
+
+                        <div class="course-item">
+                            <div class="course-progress" style="--progress: 81">
+                                <span>81%</span>
+                            </div>
+                            <div class="course-info">
+                                <h4>CSE310: PROGRAMMING IN JAVA</h4>
+                                <p>Term: 25262</p>
+                                <p>Class Today at: 11-12 AM</p>
+                            </div>
+                            <div class="course-buttons">
+                                <button class="course-btn">IP</button>
+                                <button class="course-btn">Syllabus</button>
+                                <button class="course-btn">Timetable</button>
+                                <button class="course-btn">Outcomes</button>
+                            </div>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-label">CGPA</div>
+                                <div class="stat-value">8.09 ℹ️</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">ATTENDANCE</div>
+                                <div class="stat-value">94% ℹ️</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fee Card -->
+                    <div class="card">
+                        <div class="card-header">💰 Fee</div>
+                        <div class="fee-amount">4500/-</div>
+                        <button class="pay-btn">Pay Online</button>
+                        <div class="fee-notification">
+                            <p>📄 1</p>
+                            <p>Fee Notification</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn">Transactions</button>
+                        </div>
+                    </div>
+
+                    <!-- Pending Assignments Card -->
+                    <div class="card">
+                        <div class="card-header">📝 Pending Assignments</div>
+                        <div class="message-item">
+                            <div class="message-title">CSE211 Course: CSE211</div>
+                            <p>[ CA 1 ] Last Date: 25-02-2026</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn primary">View Assignments</button>
+                        </div>
+                    </div>
+
+                    <!-- Events Card -->
+                    <div class="card">
+                        <div class="card-header">📅 Events</div>
+                        <div style="padding: 20px; text-align: center; color: #999;">
+                            <p>Get your event listed here through email</p>
+                            <p style="font-weight: 600; margin: 10px 0;">events@lpu.co.in</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn">View Details</button>
+                            <button class="action-btn primary">All Events</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Section -->
+                <div class="cards-grid">
+                    <div class="card banner-card" style="grid-column: 1 / -1;">
+                        <div class="banner-content">
+                            <h2 class="banner-title">LPU's Final-Year students getting Highest Package</h2>
+                            <div class="banner-subtitle">₹2.5 CRORE | ₹1.03 CRORE PACKAGE</div>
+                            <div class="banner-stats">
+                                1700+ LPU students selected at packages of ₹10 Lakh-₹2.5 Crore*
+                            </div>
+                            <div class="banner-footer">
+                                EDUCATION REVOLUTION STARTS AT LPU
+                            </div>
+                        </div>
+                        <div class="pagination-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+
+                    <!-- Happening Card -->
+                    <div class="card">
+                        <div class="card-header">📢 Happening</div>
+                        <div style="padding: 40px 20px; text-align: center; color: #999;">
+                            <p>* Happening Events in LPU</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn primary">View More</button>
+                        </div>
+                    </div>
+
+                    <!-- My Messages Card -->
+                    <div class="card">
+                        <div class="card-header">✉️ My Messages</div>
+                        <div class="message-item">
+                            <div class="message-title">CA 1 - By Dr. Khushbu Meena (Feb 12, 2026)</div>
+                            <div class="message-text">Dear Student, A new Test 1 is available in your Account</div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-title">Spectra Cultural Event: Registration Open! - By Rajeshwar Sharma (Feb 12, 2026)</div>
+                            <div class="message-text">Showcase your talent at Spectra and win prizes! We are looking for talents in Fashion, Dance, Mime, Quiz, Instrumental Music. Register here...</div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn">Messages Sent by Teachers</button>
+                            <button class="action-btn primary">All Messages</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placement Details Section -->
+                <h2 class="section-header">Placement Details</h2>
+                
+                <div class="placement-grid">
+                    <div class="card">
+                        <div class="card-header">🏢 Recently Placed</div>
+                        <div class="placement-item">
+                            <div class="placement-company">GATE LIMITED</div>
+                            <div class="placement-detail">Placed in: WISE FINSERV PVT. LTC</div>
+                            <div class="placement-detail">Package (CTC): 626000</div>
+                            <div class="placement-detail">Total Students Placed: 1</div>
+                        </div>
+                        <div class="pagination-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">📋 Today's Placement Drives</div>
+                        <div class="company-item">
+                            <div class="company-name">BIG BASKET - Batch 2026</div>
+                            <div class="company-stream">Stream: Agriculture</div>
+                            <div class="company-package">Salary Package: CTC Rs.4 LPA</div>
+                        </div>
+                        <div class="company-item">
+                            <div class="company-name">CODE YOUNG - Batch 2026</div>
+                            <div class="company-stream">Stream: CSE/IT,CAP,ECE,EEE,ME,CE,MBA,Agriculture,Arts,Commerce,BBA</div>
+                            <div class="company-package">Salary Package: CTC Rs.8.36 LPA For ISS Role and CTC Rs.4.86 LPA For ACE Role</div>
+                        </div>
+                        <div class="company-item">
+                            <div class="company-name">COFFEE DAY BEVERAGES - Batch 2026</div>
+                            <div class="company-stream">Stream: ECE,EEE,ME</div>
+                            <div class="company-package">Salary Package: CTC Rs. 5.25 LPA Including Retention Bonus</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Announcements -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-header" style="margin: 0;">Important Announcements</h2>
+                    <button class="view-more-btn">View All Announcements</button>
+                </div>
+
+                <div class="card">
+                    <div class="tabs">
+                        <div class="tab active">Academic (34)</div>
+                        <div class="tab">Administrative/Misc (4)</div>
+                        <div class="tab">Co-curricular/Sports/Cultural (12)</div>
+                        <div class="tab">Examination (1)</div>
+                        <div class="tab">Placement (6)</div>
+                    </div>
+
+                    <div class="announcement-item">
+                        <div class="announcement-title">EDU Revolution: Approved list of students for examination under Recognition of Prior Learning (RPL)- Phase 8 (Academic Session – 2025-26-Term2) ( LPU/10.2/ANN(DAA)/2024/023(23.2)(Vol-1)/C/260213/0101 )</div>
+                        <div class="announcement-date">Feb 13,2026</div>
+                        <div class="announcement-content">
+                            <p>Dear Students,</p>
+                            <p>Under the EDU-Revolution initiative, the nominations of students listed in the attached document have been successfully validated for <strong>Phase-8</strong> for the academic session 2025-26-Term 2 for <strong>Recognition of Prior Learning (RPL)</strong> examination.</p>
+                            <p>The detailed examination schedule—comprising date, time, and seating arrangements—will soon be made available on UMS for the selected candidates. All shortlisted students are advised to begin their preparation for the RPL examination in the respective courses.</p>
+                            <p>The interface for nominating under various EDU-Revolution categories for term 25262 is open, kindly fill your nominations through the following UMS Link</p>
+                            <p>UMS Navigation --> LMS --> EDU-Revolution Be The Change</p>
+                            <p><strong>The last date for submission of applications under the RPL category is extended till 14th February 2026.</strong></p>
+                            <p>For any assistance or clarification, students may visit the <strong>Query and Assistance Zone</strong> located at <strong>Block 27-102.</strong></p>
+                            <p style="margin-top: 10px;"><em>Uploaded By: Navdeep Singh<br>Division of Academic Affairs<br>*This is computer generated notice, not requiring signature</em></p>
+                        </div>
+                    </div>
+
+                    <div class="announcement-item">
+                        <div class="announcement-title">Be a Hero - Be a Red Verto at Our Blood Donation Camp on 18-19th February 2026 ( LPU/18.3/HOLD(NSSC)/2024/001(1.1)/C/260213/0009 )</div>
+                        <div class="announcement-date">Feb 13,2026</div>
+                        <div class="announcement-content">
+                            <p>Are you ready to wear your Red Vertos Cap?</p>
+                            <p>We're excited to announce that the Blood Donation Camp is being organized by Hindustan welfare blood donors club (Regd) Phagwara in collaboration with <strong>LPU-NSS</strong> under the aegis of Division of Youth Welfare.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Know Your Authorities Section -->
+                <h2 class="section-header" style="margin-top: 40px;">Know your Authorities</h2>
+                
+                <div class="authorities-grid">
+                    <div class="authority-card">
+                        <div class="authority-avatar">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23e0e0e0' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%23666'%3E👩%3C/text%3E%3C/svg%3E" alt="Mentor">
+                        </div>
+                        <div class="authority-role">🎓 MENTOR</div>
+                        <div class="authority-name">Zeenat Zahra</div>
+                        <div class="authority-position">Assistant Professor</div>
+                        <div class="authority-position">School of Computing and Artificial Intelligence</div>
+                        <div class="authority-contact">📧 NA</div>
+                        <div class="authority-contact">📞 7051673376</div>
+                        <button class="book-appointment">Book Appointment</button>
+                        <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                            In case of any query/issue related to 'Mentorship', <a href="#" style="color: #1e88e5;">Click Here</a>
+                        </div>
+                    </div>
+
+                    <div class="authority-card">
+                        <div class="authority-avatar">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23e0e0e0' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%23666'%3E👩%3C/text%3E%3C/svg%3E" alt="HOD">
+                        </div>
+                        <div class="authority-role">🏫 HEAD OF DEPARTMENT</div>
+                        <div class="authority-name">Dr. Subhita</div>
+                        <div class="authority-position">Assistant Professor</div>
+                        <div class="authority-position">School of AI and Emerging Technologies</div>
+                        <div class="authority-contact">📧 NA</div>
+                        <div class="authority-contact">📞 9872436377</div>
+                        <button class="book-appointment">Book Appointment</button>
+                    </div>
+
+                    <div class="authority-card">
+                        <div class="authority-avatar">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23e0e0e0' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%23666'%3E👨%3C/text%3E%3C/svg%3E" alt="HOS">
+                        </div>
+                        <div class="authority-role">🏛️ HEAD OF SCHOOL</div>
+                        <div class="authority-name">Dr. Vikas Verma</div>
+                        <div class="authority-position">Associate Professor & Associate Dean</div>
+                        <div class="authority-position">School of AI and Emerging Technologies</div>
+                        <div class="authority-contact">📧 NA</div>
+                        <div class="authority-contact">📞 9988882601</div>
+                        <button class="book-appointment">Book Appointment</button>
+                    </div>
+
+                    <div class="authority-card">
+                        <div class="authority-avatar">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect fill='%23e0e0e0' width='120' height='120'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%23666'%3E👨%3C/text%3E%3C/svg%3E" alt="Faculty">
+                        </div>
+                        <div class="authority-role">👔 HEAD OF FACULTY</div>
+                        <div class="authority-name">Dr. Lovi Raj Gupta</div>
+                        <div class="authority-position">Pro Vice Chancellor</div>
+                        <div class="authority-position">Office of Faculty of Technology and Sciences</div>
+                        <div class="authority-contact">📧 NA</div>
+                        <button class="book-appointment">Book Appointment</button>
+                    </div>
+                </div>
+
+                <div class="carousel-nav">
+                    <div class="carousel-arrow">‹</div>
+                    <div class="carousel-arrow">›</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Remove active class from all sidebar items
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            event.target.closest('.sidebar-item').classList.add('active');
+            
+            // Here you can add logic to show different sections
+            alert('Section: ' + section + ' - Full implementation would load different content here');
+        }
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Pagination dots functionality
+        document.querySelectorAll('.pagination-dots').forEach(dotsContainer => {
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', function() {
+                    dots.forEach(d => d.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+
+        // Carousel functionality
+        document.querySelectorAll('.carousel-arrow').forEach(arrow => {
+            arrow.addEventListener('click', function() {
+                // Here you would implement carousel sliding logic
+                console.log('Carousel navigation clicked');
+            });
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add button click handlers
+        document.querySelectorAll('button').forEach(button => {
+            if (!button.classList.contains('sidebar-item')) {
+                button.addEventListener('click', function() {
+                    console.log('Button clicked:', this.textContent);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
